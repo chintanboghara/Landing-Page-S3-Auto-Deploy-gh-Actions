@@ -89,7 +89,7 @@ Ensure that S3 bucket is configured to host a static website. This can be done i
 3. Scroll down to the **Static website hosting** section.
 4. Enable static website hosting and provide the appropriate index and error document names (e.g., `index.html`).
 
-# Public Access Policy for S3 Bucket: `hey-beast-landing-page`
+# Public Access Policy for S3 Bucket
 
 This S3 bucket (`hey-beast-landing-page`) is publicly accessible for reading the objects it contains. The following policy has been applied to allow public access.
 
@@ -120,5 +120,3 @@ This bucket policy allows any user, including anonymous users, to retrieve (down
         }
     ]
 }
-
-
