@@ -88,3 +88,37 @@ Ensure that S3 bucket is configured to host a static website. This can be done i
 2. Click on the **Properties** tab.
 3. Scroll down to the **Static website hosting** section.
 4. Enable static website hosting and provide the appropriate index and error document names (e.g., `index.html`).
+
+# Public Access Policy for S3 Bucket: `hey-beast-landing-page`
+
+This S3 bucket (`hey-beast-landing-page`) is publicly accessible for reading the objects it contains. The following policy has been applied to allow public access.
+
+## Policy Overview
+
+This bucket policy allows any user, including anonymous users, to retrieve (download) objects from the `hey-beast-landing-page` bucket.
+
+### Policy Details
+
+- **Policy Version:** 2012-10-17
+- **Effect:** Allow public read access to objects in the bucket.
+- **Action Allowed:** `s3:GetObject` (Retrieve objects from the bucket).
+- **Principal:** `*` (The policy applies to all users, including anonymous users).
+- **Resource:** Applies to all objects within the bucket `hey-beast-landing-page`.
+
+### JSON Policy
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "PublicReadGetObject",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::hey-beast-landing-page/*"
+        }
+    ]
+}
+
+
