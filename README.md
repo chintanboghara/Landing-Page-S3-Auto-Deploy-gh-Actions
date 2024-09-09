@@ -1,2 +1,2 @@
-# Landing-Page
+# Landing Page
 Responsive Landing Page
