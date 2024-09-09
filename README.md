@@ -75,15 +75,15 @@ This section defines the steps to be run as part of the deployment job:
 
 ## Prerequisites
 
-- You need to have an AWS account and an S3 bucket (e.g., `hey-beast-landing-page`) created where the static site will be hosted.
+- An AWS account and an S3 bucket (e.g., `hey-beast-landing-page`) created where the static site will be hosted.
 - AWS credentials (Access Key ID and Secret Access Key) should be stored as secrets in your GitHub repository:
   - `AWS_ACCESS_KEY_ID`
   - `AWS_SECRET_ACCESS_KEY`
 
 ## AWS S3 Bucket Configuration
 
-Ensure that your S3 bucket is configured to host a static website. This can be done in the AWS S3 console:
-1. Go to your bucket.
+Ensure that S3 bucket is configured to host a static website. This can be done in the AWS S3 console:
+1. Go to S3 bucket.
 2. Click on the **Properties** tab.
 3. Scroll down to the **Static website hosting** section.
 4. Enable static website hosting and provide the appropriate index and error document names (e.g., `index.html`).
