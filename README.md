@@ -2,7 +2,7 @@
 
 **main.yml**
 ```yaml
-name: Portfolio Deployment
+name: Landing Page Deployment
 
 on:
   push:
