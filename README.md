@@ -1,111 +1,36 @@
-## URL: http://hey-beast-landing-page.s3-website.ap-south-1.amazonaws.com
+# Hey Beast Landing Page Deployment
 
-**main.yml**
-```yaml
-name: Landing Page Deployment
+This repository contains the landing page for Hey Beast, automatically deployed to an AWS S3 bucket using GitHub Actions. The deployed site is accessible at [http://hey-beast-landing-page.s3-website.ap-south-1.amazonaws.com](http://hey-beast-landing-page.s3-website.ap-south-1.amazonaws.com).
 
-on:
-  push:
-    branches:
-    - main
+## Deployment
 
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v1
+The deployment is managed by a GitHub Actions workflow defined in `.github/workflows/main.yml`. It triggers on pushes to the `main` branch and includes the following steps:
 
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-1
+1. **Checkout the repository**: Retrieves the latest code using `actions/checkout@v1`.
+2. **Configure AWS Credentials**: Authenticates with AWS using secrets stored in GitHub.
+3. **Deploy to S3**: Syncs the repository files to the `hey-beast-landing-page` S3 bucket with the `--delete` flag to remove outdated files.
 
-    - name: Deploy static site to S3 bucket
-      run: aws s3 sync . s3://hey-beast-landing-page --delete
-```
-
-This project uses GitHub Actions to automatically deploy portfolio to an AWS S3 bucket whenever changes are pushed to the `main` branch.
-
-## Workflow Overview
-
-The deployment process is handled by a GitHub Actions workflow that performs the following steps:
-
-1. **Checkout the repository** - Uses the `actions/checkout@v1` action to checkout the repository so the build can access the latest code.
-2. **Configure AWS Credentials** - Configures AWS credentials using the GitHub Secrets to securely authenticate with AWS.
-3. **Deploy to S3** - Syncs the local files to the S3 bucket specified, making sure to delete any files in the bucket that no longer exist in the repository.
-
-## Workflow Configuration
-
-The workflow is defined in a YAML file (`.github/workflows/deploy.yml`). Here is a breakdown of the workflow:
-
-### `on`
-This section defines when the workflow is triggered:
-- **push** - The workflow is triggered whenever there is a push to the `main` branch.
-
-### `jobs`
-This section defines the steps to be run as part of the deployment job:
-
-- **runs-on** - The job will run on the latest Ubuntu environment provided by GitHub Actions.
-  
-#### Steps:
-
-1. **Checkout** - The repository code is checked out to the runner using the `actions/checkout@v1` action.
-    ```yaml
-    - name: Checkout
-      uses: actions/checkout@v1
-    ```
-
-2. **Configure AWS Credentials** - AWS credentials are configured using secrets stored in the GitHub repository. These secrets (`AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`) must be set up beforehand in your GitHub repository.
-    ```yaml
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-1
-    ```
-
-3. **Deploy static site to S3 bucket** - This step syncs the local directory with the S3 bucket using the AWS CLI command `aws s3 sync`. The `--delete` flag ensures that files in the bucket that no longer exist in the local directory are deleted.
-    ```yaml
-    - name: Deploy static site to S3 bucket
-      run: aws s3 sync . s3://hey-beast-landing-page --delete
-    ```
+For more details, refer to the [workflow file](.github/workflows/main.yml).
 
 ## Prerequisites
 
-- An AWS account and an S3 bucket (e.g., `hey-beast-landing-page`) created where the static site will be hosted.
-- AWS credentials (Access Key ID and Secret Access Key) should be stored as secrets in your GitHub repository:
-  - `AWS_ACCESS_KEY_ID`
-  - `AWS_SECRET_ACCESS_KEY`
+- An AWS account with an S3 bucket (`hey-beast-landing-page`) configured for static website hosting. See [AWS S3 documentation](https://docs.aws.amazon.com/AmazonS3/latest/userguide/WebsiteHosting.html) for setup instructions.
+- AWS credentials (`AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`) stored as secrets in your GitHub repository. Learn how to configure secrets in the [GitHub documentation](https://docs.github.com/en/actions/security-guides/encrypted-secrets).
 
 ## AWS S3 Bucket Configuration
 
-Ensure that S3 bucket is configured to host a static website. This can be done in the AWS S3 console:
-1. Go to S3 bucket.
-2. Click on the **Properties** tab.
-3. Scroll down to the **Static website hosting** section.
-4. Enable static website hosting and provide the appropriate index and error document names (e.g., `index.html`).
+To host the static website, configure your S3 bucket as follows:
 
-# Public Access Policy for S3 Bucket
+1. Navigate to your S3 bucket in the AWS Management Console.
+2. Go to the **Properties** tab.
+3. Enable **Static website hosting** under that section.
+4. Set the index document to `index.html` and optionally specify an error document.
 
-This S3 bucket (`hey-beast-landing-page`) is publicly accessible for reading the objects it contains. The following policy has been applied to allow public access.
+For detailed guidance, consult the [AWS S3 documentation](https://docs.aws.amazon.com/AmazonS3/latest/userguide/WebsiteHosting.html).
 
-## Policy Overview
+## Public Access Policy
 
-This bucket policy allows any user, including anonymous users, to retrieve (download) objects from the `hey-beast-landing-page` bucket.
-
-### Policy Details
-
-- **Policy Version:** 2012-10-17
-- **Effect:** Allow public read access to objects in the bucket.
-- **Action Allowed:** `s3:GetObject` (Retrieve objects from the bucket).
-- **Principal:** `*` (The policy applies to all users, including anonymous users).
-- **Resource:** Applies to all objects within the bucket `hey-beast-landing-page`.
-
-### JSON Policy
+The `hey-beast-landing-page` bucket is set to allow public read access, enabling the static website to be publicly accessible. The bucket policy is:
 
 ```json
 {
@@ -120,3 +45,6 @@ This bucket policy allows any user, including anonymous users, to retrieve (down
         }
     ]
 }
+```
+
+**Note:** Public access means anyone can view the bucket's files. Verify this meets your security needs and avoid storing sensitive data in the bucket.
